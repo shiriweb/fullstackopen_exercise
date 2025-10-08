@@ -1,9 +1,8 @@
 const Notification = ({ notification }) =>{
 
-    //yade notification ko key (msg) ko value null nae xa vane return null
     if ( notification.message === null) return null;
 
-    //using javascript obj as inline style inreact
+// Adding the styling 
     const notificationStyle = {
         color: notification.type === 'success' ? 'green' : 'red',
         background: 'lightgray',
