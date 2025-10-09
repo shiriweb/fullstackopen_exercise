@@ -1,17 +1,17 @@
-import axios from 'axios';
-const baseUrl = '/api/persons';
+import axios from 'axios'
+const baseUrl = 'http://localhost:3001/api/persons'
 
+// Get all persons
+const getAll = () => axios.get(baseUrl).then(res => res.data)
 
-// Added the functionality to the app
-//used get method to read
-const getAll = () => axios.get(baseUrl);
+// Create a new person
+const create = newPerson => axios.post(baseUrl, newPerson).then(res => res.data)
 
-const create = newPerson => axios.post(baseUrl, newPerson);
+// Delete a person by id
+const remove = id => axios.delete(`${baseUrl}/${id}`)
 
-//used put method to update
-const update = (id, newObject) => axios.put(`${baseUrl}/${id}`, newObject);
+// Update a person by id
+const update = (id, updatedPerson) =>
+  axios.put(`${baseUrl}/${id}`, updatedPerson).then(res => res.data)
 
-//used  delete method to remove
-const remove = id => axios.delete(`${baseUrl}/${id}`);
-
-export default { getAll, create, update, remove };
+export default { getAll, create, remove, update }
