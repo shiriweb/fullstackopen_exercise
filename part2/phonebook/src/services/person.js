@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-// connecting the frontend to the backend
+
 const baseUrl = 'http://localhost:3001/api/persons'
 
 // Get all persons
