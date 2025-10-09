@@ -1,4 +1,6 @@
 const express = require('express')
+
+// adding cors
 const cors = require('cors')
 const morgan = require('morgan')
 
