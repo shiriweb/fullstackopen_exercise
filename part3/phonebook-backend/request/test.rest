@@ -1,12 +1,13 @@
-DELETE http://localhost:3001/api/persons/68ede772a0c35a70b196a15f
+# DELETE http://localhost:3001/api/persons/68ede772a0c35a70b196a15f
 
 
 # GET http://localhost:3001/api/persons
 
 
-# PUT http://localhost:3001/api/persons/68ede772a0c35a70b196a15f
-# Content-Type: application/json
+POST http://localhost:3001/api/persons/
+Content-Type: application/json
 
-# {
-#     "name": "pawan"
-# }
+{
+    "name": "gopal",
+    "number": "01-4255453"
+}
