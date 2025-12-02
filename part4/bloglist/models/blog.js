@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-
 const blogSchema = new mongoose.Schema({
   title: String,
   author: String,
@@ -7,4 +6,4 @@ const blogSchema = new mongoose.Schema({
   likes: Number,
 });
 
-module.exports = mongoose.model("Blog", blogSchema);
+const Blog = mongoose.model("Blog", blogSchema);
