@@ -1,44 +1,67 @@
-// utils/list_helper.js
-
 const dummy = (blogs) => {
   return 1;
 };
 
 const totalLikes = (blogs) => {
-  return blogs.reduce((sum, blog) => sum + blog.likes, 0);
+  let sum = 0;
+  blogs.forEach((blog) => {
+    sum += blog.likes;
+  });
+  return sum;
 };
 
 const favoriteBlog = (blogs) => {
   if (blogs.length === 0) return null;
-  return blogs.reduce((fav, blog) => (blog.likes > fav.likes ? blog : fav));
+
+  let fav = blogs[0];
+
+  blogs.forEach((blog) => {
+    if (blog.likes > fav.likes) {
+      fav = blog;
+    }
+  });
+
+  return fav;
 };
 
 const mostBlogs = (blogs) => {
-  const counts = {};
+  if (blogs.length === 0) return null;
+
+  const count = {};
+
   blogs.forEach((blog) => {
-    counts[blog.author] = (counts[blog.author] || 0) + 1;
+    count[blog.author] = (count[blog.author] || 0) + 1;
   });
-  const topAuthor = Object.keys(counts).reduce((a, b) =>
-    counts[a] > counts[b] ? a : b
-  );
-  return {
-    author: topAuthor,
-    blogs: counts[topAuthor],
-  };
+
+  let topAuthor = null;
+  let topCount = 0;
+
+  for (let author in count) {
+    if (count[author] > topCount) {
+      topCount = count[author];
+      topAuthor = author;
+    }
+  }
+
+  return { author: topAuthor, blogs: topCount };
 };
 
 const mostLikes = (blogs) => {
-  const counts = {};
+  if (blogs.length === 0) return null;
+  const likesCount = {};
   blogs.forEach((blog) => {
-    counts[blog.author] = (counts[blog.author] || 0) + blog.likes;
+    likesCount[blog.author] = (likesCount[blog.author] || 0) + blog.likes;
   });
-  const topAuthor = Object.keys(counts).reduce((a, b) =>
-    counts[a] > counts[b] ? a : b
-  );
-  return {
-    author: topAuthor,
-    likes: counts[topAuthor],
-  };
+  let topAuthor = null;
+  let maxLikes = 0;
+  for (let author in likesCount) {
+    if (likesCount[author] > maxLikes) {
+      maxLikes = likesCount[author];
+      topAuthor = author;
+    }
+  }
+
+  return { author: topAuthor, likes: maxLikes };
 };
 
 module.exports = {
