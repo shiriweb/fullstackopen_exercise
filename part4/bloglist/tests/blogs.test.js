@@ -16,7 +16,10 @@ beforeEach(async () => {
   testUser = await helper.getTestUser();
   token = helper.getTokenForUser(testUser);
 
-  const blogsWithUser = helper.initialBlogs.map(b => ({ ...b, user: testUser._id }));
+  const blogsWithUser = helper.initialBlogs.map((b) => ({
+    ...b,
+    user: testUser._id,
+  }));
   await Blog.insertMany(blogsWithUser);
 });
 
@@ -44,7 +47,7 @@ describe("Blog API tests (with auth)", () => {
     const newBlog = {
       title: "No Likes Blog",
       author: "Author Four",
-      url: "http://nolikes.blog"
+      url: "http://nolikes.blog",
     };
 
     const response = await api
@@ -78,13 +81,17 @@ describe("Deletion tests", () => {
       .expect(204);
 
     const blogsAtEnd = await helper.blogsInDb();
-    const titles = blogsAtEnd.map(b => b.title);
+    const titles = blogsAtEnd.map((b) => b.title);
     assert(!titles.includes(blogToDelete.title));
     assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length - 1);
   });
 
   test("fails with 401 if user is not the creator", async () => {
-    const otherUser = new User({ username: "other", passwordHash: await require('bcrypt').hash("pass",10), name: "Other" });
+    const otherUser = new User({
+      username: "other",
+      passwordHash: await require("bcrypt").hash("pass", 10),
+      name: "Other",
+    });
     await otherUser.save();
     const otherToken = helper.getTokenForUser(otherUser);
 
@@ -98,6 +105,20 @@ describe("Deletion tests", () => {
 
     const blogsAtEnd = await helper.blogsInDb();
     assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length);
+  });
+
+  test("adding a blog fails without a token", async () => {
+    const newBlog = {
+      title: "No token blog",
+      author: "Test",
+      url: "http://example.com",
+    };
+
+    await api
+      .post("/api/blogs")
+      .send(newBlog)
+      .expect(401)
+      .expect("Content-Type", /application\/json/);
   });
 });
 

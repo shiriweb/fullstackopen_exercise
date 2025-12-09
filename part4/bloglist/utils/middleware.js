@@ -26,8 +26,8 @@ const errorHandler = (error, request, response, next) => {
 
 const tokenExtractor = (request, response, next) => {
   const authorization = request.get("authorization");
-  if (authorization && authorization.startsWith("Bearer ")) {
-    request.token = authorization.replace("Bearer ", "");
+  if (authorization && authorization.toLowerCase().startsWith("bearer ")) {
+    request.token = authorization.substring(7);
   } else {
     request.token = null;
   }
@@ -41,8 +41,7 @@ const userExtractor = async (request, response, next) => {
       if (!decodedToken.id) {
         return response.status(401).json({ error: "token invalid" });
       }
-      const user = await User.findById(decodedToken.id);
-      request.user = user;
+      request.user = await User.findById(decodedToken.id);
     } catch (error) {
       return next(error);
     }
