@@ -1,3 +1,4 @@
+//schema and model
 const mongoose = require("mongoose");
 
 const personSchema = new mongoose.Schema({
