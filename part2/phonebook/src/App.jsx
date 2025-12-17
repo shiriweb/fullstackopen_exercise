@@ -15,7 +15,6 @@ const App = () => {
     type: null,
   });
 
-  // Fetch all persons from backend
   useEffect(() => {
     personService
       .getAll()
@@ -76,7 +75,6 @@ const App = () => {
         setNewNumber("");
       })
       .catch((error) => {
-        // Show backend validation error
         const message = error.response?.data?.error || "Failed to add person";
         showNotification(message, "error");
       });
