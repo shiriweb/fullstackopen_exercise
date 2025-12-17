@@ -10,14 +10,17 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
-
   const [notification, setNotification] = useState({
     message: null,
     type: null,
   });
 
+  // Fetch all persons from backend
   useEffect(() => {
-    personService.getAll().then((initialPersons) => setPersons(initialPersons));
+    personService
+      .getAll()
+      .then((initialPersons) => setPersons(initialPersons))
+      .catch((error) => showNotification("Failed to fetch data", "error"));
   }, []);
 
   const showNotification = (message, type = "success") => {
@@ -52,11 +55,11 @@ const App = () => {
             setNewName("");
             setNewNumber("");
           })
-          .catch(() => {
-            showNotification(
-              `Information of ${newName} has already been removed from server`,
-              "error"
-            );
+          .catch((error) => {
+            const message =
+              error.response?.data?.error ||
+              `Information of ${newName} has already been removed from server`;
+            showNotification(message, "error");
             setPersons(persons.filter((p) => p.id !== existingPerson.id));
           });
       }
@@ -72,8 +75,10 @@ const App = () => {
         setNewName("");
         setNewNumber("");
       })
-      .catch(() => {
-        showNotification("Failed to add person", "error");
+      .catch((error) => {
+        // Show backend validation error
+        const message = error.response?.data?.error || "Failed to add person";
+        showNotification(message, "error");
       });
   };
 
@@ -86,11 +91,11 @@ const App = () => {
         setPersons(persons.filter((p) => p.id !== id));
         showNotification(`Deleted ${name}`, "success");
       })
-      .catch(() => {
-        showNotification(
-          `Information of ${name} was already removed from server`,
-          "error"
-        );
+      .catch((error) => {
+        const message =
+          error.response?.data?.error ||
+          `Information of ${name} was already removed from server`;
+        showNotification(message, "error");
         setPersons(persons.filter((p) => p.id !== id));
       });
   };
