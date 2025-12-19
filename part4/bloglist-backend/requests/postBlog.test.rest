@@ -1,9 +1,11 @@
-http://localhost:3003/api/blogs
+# http://localhost:3003/api/users
 
-Content-Type: application/json
-{
-  "title": "My First Blog",
-  "author": "Shirisha",
-  "url": "https://example.com",
-  "likes": 10
-}
+# Content-Type: application/json
+# {
+#   "title": "My First Blog",
+#   "author": "Shirisha",
+#   "url": "https://example.com",
+#   "likes": 10
+# }
+
+
