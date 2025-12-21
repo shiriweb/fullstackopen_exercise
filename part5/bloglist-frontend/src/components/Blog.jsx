@@ -1,35 +1,41 @@
 import { useState } from "react";
 
 const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
-  const [detailsVisible, setDetailsVisible] = useState(false);
+  const [visible, setVisible] = useState(false);
 
-  const toggleDetails = () => setDetailsVisible(!detailsVisible);
-
-  const handleLike = () => {
-    updateBlog(blog.id, { ...blog, likes: blog.likes + 1 });
+  const toggleVisibility = () => {
+    setVisible(!visible);
   };
 
-  const handleDelete = () => deleteBlog(blog.id);
-
   return (
-    <div
-      style={{ padding: 10, border: "solid", borderWidth: 1, marginBottom: 5 }}
-    >
+    <div className="blog">
       <div>
         {blog.title} {blog.author}
-        <button onClick={toggleDetails}>
-          {detailsVisible ? "hide" : "view"}
+        <button className="view-button" onClick={toggleVisibility}>
+          {visible ? "hide" : "view"}
         </button>
       </div>
-      {detailsVisible && (
-        <div>
-          <p>{blog.url}</p>
-          <p>
-            likes {blog.likes} <button onClick={handleLike}>like</button>
-          </p>
-          <p>{blog.user?.name}</p>
-          {blog.user?.username === user.username && (
-            <button onClick={handleDelete}>remove</button>
+      {visible && (
+        <div className="blog-details">
+          <div className="blog-url">{blog.url}</div>
+          <div className="blog-likes">
+            likes {blog.likes}
+            <button
+              className="like-button"
+              onClick={() =>
+                updateBlog(blog.id, { ...blog, likes: blog.likes + 1 })
+              }
+            >
+              like
+            </button>
+          </div>
+          {user && blog.user.username === user.username && (
+            <button
+              className="remove-button"
+              onClick={() => deleteBlog(blog.id)}
+            >
+              remove
+            </button>
           )}
         </div>
       )}
