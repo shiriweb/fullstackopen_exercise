@@ -7,6 +7,8 @@ const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
     setVisible(!visible);
   };
 
+  const canDelete = blog.user && user && blog.user.username === user.username;
+
   return (
     <div className="blog">
       <div>
@@ -15,6 +17,7 @@ const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
           {visible ? "hide" : "view"}
         </button>
       </div>
+
       {visible && (
         <div className="blog-details">
           <div className="blog-url">{blog.url}</div>
@@ -29,11 +32,8 @@ const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
               like
             </button>
           </div>
-          {user && blog.user.username === user.username && (
-            <button
-              className="remove-button"
-              onClick={() => deleteBlog(blog.id)}
-            >
+          {canDelete && (
+            <button className="remove-button" onClick={() => deleteBlog(blog.id)}>
               remove
             </button>
           )}

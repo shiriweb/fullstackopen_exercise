@@ -23,9 +23,10 @@ const App = () => {
     try {
       const user = await loginService.login({ username, password });
       setUser(user);
+      blogService.setToken(user.token);
+      window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
       setUsername("");
       setPassword("");
-      window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
     } catch {
       alert("wrong credentials");
     }
