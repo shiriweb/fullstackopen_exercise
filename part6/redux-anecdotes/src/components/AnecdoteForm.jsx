@@ -1,22 +1,49 @@
-import { useDispatch } from "react-redux";
-import { createAnecdote } from "../reducers/anecdoteReducer";
-import { setNotification } from "../reducers/notificationReducer";
+import { useState, useContext } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createAnecdote } from "../requests/requests";
+import NotificationContext from "../contexts/NotificationContext";
 
 const AnecdoteForm = () => {
-  const dispatch = useDispatch();
+  const [content, setContent] = useState("");
+  const queryClient = useQueryClient();
+  const { dispatch } = useContext(NotificationContext);
 
-  const addAnecdote = (event) => {
-    event.preventDefault();
-    const content = event.target.anecdote.value;
-    event.target.anecdote.value = "";
-    dispatch(createAnecdote(content));
-    dispatch(setNotification(`You added '${content}'`, 5));
+  const createMutation = useMutation({
+    mutationFn: createAnecdote,
+    onSuccess: (newAnecdote) => {
+      const anecdotes = queryClient.getQueryData(["anecdotes"]) || [];
+      queryClient.setQueryData(["anecdotes"], anecdotes.concat(newAnecdote));
+
+      dispatch({
+        type: "SET",
+        payload: `Added anecdote: "${newAnecdote.content}"`,
+      });
+      setTimeout(() => dispatch({ type: "CLEAR" }), 5000);
+    },
+    onError: (error) => {
+      dispatch({ type: "SET", payload: `Error: ${error.message}` });
+      setTimeout(() => dispatch({ type: "CLEAR" }), 5000);
+    },
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (content.length < 5) {
+      alert("Anecdote must be at least 5 characters");
+      return;
+    }
+    createMutation.mutate({ content, votes: 0 });
+    setContent("");
   };
 
   return (
-    <form onSubmit={addAnecdote}>
-      <input name="anecdote" />
-      <button type="submit">create</button>
+    <form onSubmit={handleSubmit}>
+      <input
+        value={content}
+        onChange={(e) => setContent(e.target.value)}
+        placeholder="Write anecdote"
+      />
+      <button type="submit">Add</button>
     </form>
   );
 };

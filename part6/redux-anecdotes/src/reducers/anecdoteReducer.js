@@ -21,7 +21,6 @@ const anecdoteSlice = createSlice({
 export const { setAnecdotes, appendAnecdote, updateAnecdote } =
   anecdoteSlice.actions;
 
-// Async actions using Redux Thunk
 
 export const initializeAnecdotes = () => {
   return async (dispatch) => {

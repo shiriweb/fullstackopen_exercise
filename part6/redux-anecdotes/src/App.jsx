@@ -1,26 +1,29 @@
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-
+import { useQuery } from "@tanstack/react-query";
+import { getAnecdotes } from "./requests/requests";
 import AnecdoteForm from "./components/AnecdoteForm";
 import AnecdoteList from "./components/AnecdoteList";
 import Notification from "./components/Notification";
-import { initializeAnecdotes } from "./reducers/anecdoteReducer";
 
-function App() {
-  const dispatch = useDispatch();
+const App = () => {
+  const result = useQuery({
+    queryKey: ["anecdotes"],
+    queryFn: getAnecdotes,
+    retry: false,
+  });
 
-  useEffect(() => {
-    dispatch(initializeAnecdotes());
-  }, [dispatch]);
+  if (result.isLoading) return <div>loading data...</div>;
+  if (result.isError) return <div>anecdote service not available</div>;
+
+  const anecdotes = result.data;
 
   return (
     <div>
       <h2>Anecdotes</h2>
       <Notification />
       <AnecdoteForm />
-      <AnecdoteList />
+      <AnecdoteList anecdotes={anecdotes} />
     </div>
   );
-}
+};
 
 export default App;
