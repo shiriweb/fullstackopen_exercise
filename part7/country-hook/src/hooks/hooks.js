@@ -1,0 +1,25 @@
+import { useState, useEffect } from "react";
+import axios from "axios";
+
+export const useCountry = (name) => {
+  const [country, setCountry] = useState(null);
+
+  useEffect(() => {
+    if (!name) return;
+
+    const fetchCountry = async () => {
+      try {
+        const res = await axios.get(
+          `https://studies.cs.helsinki.fi/restcountries/api/name/${name}`
+        );
+        setCountry({ found: true, data: res.data });
+      } catch (error) {
+        setCountry({ found: false });
+      }
+    };
+
+    fetchCountry();
+  }, [name]);
+
+  return country;
+};
