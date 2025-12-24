@@ -1,50 +1,31 @@
-const initialAnecdotes = [
-  "If it hurts, do it more often",
-  "Adding manpower to a late software project makes it later!",
-  "The first 90 percent of the code accounts for the first 90 percent of the development time...",
-  "Any fool can write code that a computer can understand. Good programmers write code that humans can understand.",
-  "Premature optimization is the root of all evil.",
-  "Debugging is twice as hard as writing the code in the first place.",
-].map((anecdote) => ({
-  content: anecdote,
-  id: (100000 * Math.random()).toFixed(0),
-  votes: 0,
-}));
+import { createSlice } from "@reduxjs/toolkit";
 
-const anecdoteReducer = (state = initialAnecdotes, action) => {
-  switch (action.type) {
-    case "VOTE":
-      return state
-        .map((a) =>
-          a.id === action.payload ? { ...a, votes: a.votes + 1 } : a
-        )
-        .sort((a, b) => b.votes - a.votes);
+const initialState = [
+  { content: "If it hurts, do it more often", id: 1, votes: 0 },
+  {
+    content: "Adding manpower to a late software project makes it later",
+    id: 2,
+    votes: 0,
+  },
+];
 
-    case "ADD_ANECDOTE":
-      return [...state, action.payload];
+const generateId = () => Number((Math.random() * 1000000).toFixed(0));
 
-    default:
-      return state;
-  }
-};
-
-
-export const voteAnecdote = (id) => {
-  return {
-    type: "VOTE",
-    payload: id,
-  };
-};
-
-export const createAnecdote = (content) => {
-  return {
-    type: "ADD_ANECDOTE",
-    payload: {
-      content,
-      id: (100000 * Math.random()).toFixed(0),
-      votes: 0,
+const anecdoteSlice = createSlice({
+  name: "anecdotes",
+  initialState,
+  reducers: {
+    createAnecdote(state, action) {
+      state.push({ content: action.payload, id: generateId(), votes: 0 });
     },
-  };
-};
+    voteAnecdote(state, action) {
+      const id = action.payload;
+      const anecdote = state.find((a) => a.id === id);
+      const updated = { ...anecdote, votes: anecdote.votes + 1 };
+      return state.map((a) => (a.id !== id ? a : updated));
+    },
+  },
+});
 
-export default anecdoteReducer;
+export const { createAnecdote, voteAnecdote } = anecdoteSlice.actions;
+export default anecdoteSlice.reducer;
