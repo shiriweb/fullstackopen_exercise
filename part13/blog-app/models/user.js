@@ -17,7 +17,7 @@ User.init(
     passwordHash: DataTypes.STRING,
   },
   {
-    sequelize, // ✅ must be the Sequelize instance
+    sequelize, 
     modelName: "user",
     underscored: true,
     timestamps: false,

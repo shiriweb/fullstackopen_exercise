@@ -3,7 +3,6 @@ const { Blog, User } = require("../models");
 const jwt = require("jsonwebtoken");
 const { SECRET } = require("../util/config");
 
-// Middleware to extract token
 const tokenExtractor = (req, res, next) => {
   const authorization = req.get("authorization");
   if (authorization && authorization.toLowerCase().startsWith("bearer ")) {
@@ -18,7 +17,6 @@ const tokenExtractor = (req, res, next) => {
   next();
 };
 
-// Get all blogs
 router.get("/", async (req, res) => {
   try {
     const blogs = await Blog.findAll({
@@ -31,7 +29,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Create blog (only logged-in user)
 router.post("/", tokenExtractor, async (req, res) => {
   try {
     const user = await User.findByPk(req.decodedToken.id);
@@ -47,7 +44,6 @@ router.post("/", tokenExtractor, async (req, res) => {
   }
 });
 
-// Update likes
 router.put("/:id", async (req, res) => {
   try {
     const blog = await Blog.findByPk(req.params.id);

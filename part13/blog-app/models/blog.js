@@ -1,29 +1,31 @@
 const { Model, DataTypes } = require("sequelize");
-const { sequelize } = require("../util/db"); // Make sure this is { sequelize }
+const { sequelize } = require("../util/db");
 
 class Blog extends Model {}
 
 Blog.init(
   {
-    title: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    author: DataTypes.STRING,
-    url: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    likes: {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    title: { type: DataTypes.STRING, allowNull: false },
+    author: { type: DataTypes.STRING, allowNull: false },
+    url: { type: DataTypes.STRING, allowNull: false },
+    likes: { type: DataTypes.INTEGER, defaultValue: 0 },
+    year: {
       type: DataTypes.INTEGER,
-      defaultValue: 0,
+      allowNull: true,
+      validate: { min: 1991, max: new Date().getFullYear() },
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: { model: "users", key: "id" },
     },
   },
   {
-    sequelize, // ✅ must be the Sequelize instance
-    modelName: "blog",
+    sequelize,
     underscored: true,
-    timestamps: false,
+    timestamps: true,
+    modelName: "blog",
   }
 );
 
